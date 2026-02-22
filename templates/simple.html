@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deepfake Detector</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f5f7ff;
+        }
+        
+        .upload-area:hover {
+            border-color: #764ba2;
+            background: #e8ecff;
+        }
+        
+        .upload-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .preview {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .preview img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.4);
+        }
+        
+        .result {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .result.real {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .result.fake {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .result-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+        }
+        
+        .result-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .confidence {
+            font-size: 18px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .reset-btn {
+            background: #6c757d;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Deepfake Detector</h1>
+        <p class="subtitle">Upload an image to detect if it's real or fake</p>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📷</div>
+            <h3>Click to Upload Image</h3>
+            <p>JPG, PNG (Max 10MB)</p>
+        </div>
+        
+        <input type="file" id="fileInput" accept="image/*">
+        
+        <div class="preview" id="preview">
+            <img id="previewImg" src="" alt="Preview">
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing...</p>
+        </div>
+        
+        <button id="analyzeBtn">Analyze Image</button>
+        
+        <div class="result" id="result">
+            <div class="result-icon" id="resultIcon"></div>
+            <div class="result-text" id="resultText"></div>
+            <div class="confidence" id="confidence"></div>
+        </div>
+        
+        <button class="reset-btn" id="resetBtn">Upload Another Image</button>
+    </div>
+
+    <script>
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const preview = document.getElementById('preview');
+        const previewImg = document.getElementById('previewImg');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const resultIcon = document.getElementById('resultIcon');
+        const resultText = document.getElementById('resultText');
+        const confidence = document.getElementById('confidence');
+        const resetBtn = document.getElementById('resetBtn');
+        
+        let selectedFile = null;
+        
+        uploadArea.onclick = () => fileInput.click();
+        
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImg.src = e.target.result;
+                preview.style.display = 'block';
+                analyzeBtn.style.display = 'block';
+                uploadArea.style.display = 'none';
+                result.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        };
+        
+        analyzeBtn.onclick = async () => {
+            if (!selectedFile) return;
+            
+            analyzeBtn.style.display = 'none';
+            loading.style.display = 'block';
+            result.style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                loading.style.display = 'none';
+                
+                if (data.error) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                const isReal = data.result === 'Real';
+                result.className = 'result ' + (isReal ? 'real' : 'fake');
+                resultIcon.textContent = isReal ? '✅' : '⚠️';
+                resultText.textContent = data.result + ' Image';
+                confidence.textContent = 'Confidence: ' + data.confidence + '%';
+                result.style.display = 'block';
+                resetBtn.style.display = 'block';
+                
+            } catch (error) {
+                loading.style.display = 'none';
+                alert('Error: ' + error.message);
+            }
+        };
+        
+        resetBtn.onclick = () => {
+            fileInput.value = '';
+            selectedFile = null;
+            preview.style.display = 'none';
+            analyzeBtn.style.display = 'none';
+            result.style.display = 'none';
+            resetBtn.style.display = 'none';
+            uploadArea.style.display = 'block';
+        };
+    </script>
+</body>
+</html>
