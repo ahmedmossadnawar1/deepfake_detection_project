@@ -10,7 +10,7 @@ def explore_dataset(data_dir='data'):
     """Full dataset analysis"""
     
     print("=" * 60)
-    print("🔍 استكشاف Dataset")
+    print("🔍 Exploring dataset")
     print("=" * 60)
     
     # Collect statistics
@@ -23,7 +23,7 @@ def explore_dataset(data_dir='data'):
             stats[split] = {'real': real_count, 'fake': fake_count}
     
     # Print statistics
-    print("\n📊 إحصائيات Dataset:")
+    print("\n📊 Dataset statistics:")
     print("-" * 60)
     total_real = sum(s['real'] for s in stats.values())
     total_fake = sum(s['fake'] for s in stats.values())
@@ -39,7 +39,7 @@ def explore_dataset(data_dir='data'):
     print(f"\n⚖️  Balance Ratio: {balance:.2%}")
     
     # Analyze image dimensions
-    print("\n📐 تحليل أبعاد الصور...")
+    print("\n📐 Analyzing image dimensions...")
     train_path = Path(data_dir) / 'train'
     
     widths, heights = [], []
@@ -57,16 +57,16 @@ def explore_dataset(data_dir='data'):
             except:
                 pass
     
-    print(f"   متوسط العرض: {np.mean(widths):.0f} px")
-    print(f"   متوسط الارتفاع: {np.mean(heights):.0f} px")
+    print(f"   Average width: {np.mean(widths):.0f} px")
+    print(f"   Average height: {np.mean(heights):.0f} px")
     
-    print("\n✅ انتهى الاستكشاف!")
-    print("\n🚀 الخطوة التالية:")
+    print("\n✅ Exploration complete!")
+    print("\n🚀 Next steps:")
     print("   python model_pytorch.py")
 
 if __name__ == "__main__":
     if os.path.exists('data/train'):
         explore_dataset()
     else:
-        print("❌ مجلد data/train غير موجود!")
-        print("   نفذ: python organize_dataset.py أولاً")
+        print("❌ data/train folder not found!")
+        print("   Run: python organize_dataset.py first")
