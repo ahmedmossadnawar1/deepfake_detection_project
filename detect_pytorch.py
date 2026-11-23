@@ -5,7 +5,7 @@ from PIL import Image
 import sys
 import os
 
-# Model Architecture (نفس model_pytorch.py بالظبط)
+# Model Architecture (same as model_pytorch.py)
 class DeepfakeDetector(nn.Module):
     def __init__(self, model_type='mobilenet', pretrained=False):
         super(DeepfakeDetector, self).__init__()
