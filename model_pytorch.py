@@ -4,7 +4,7 @@ import torch.nn as nn
 from torchvision import models
 
 class DeepfakeDetector(nn.Module):
-    """نموذج كشف Deepfakes باستخدام MobileNetV2"""
+    """Deepfake detection model based on MobileNetV2"""
     
     def __init__(self, model_type='mobilenet', pretrained=True):
         super(DeepfakeDetector, self).__init__()
