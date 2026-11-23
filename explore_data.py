@@ -7,13 +7,13 @@ import random
 from pathlib import Path
 
 def explore_dataset(data_dir='data'):
-    """تحليل شامل للـ dataset"""
+    """Full dataset analysis"""
     
     print("=" * 60)
     print("🔍 استكشاف Dataset")
     print("=" * 60)
     
-    # جمع الإحصائيات
+    # Collect statistics
     stats = {}
     for split in ['train', 'validation', 'test']:
         split_path = Path(data_dir) / split
@@ -22,7 +22,7 @@ def explore_dataset(data_dir='data'):
             fake_count = len(list((split_path / 'fake').glob('*')))
             stats[split] = {'real': real_count, 'fake': fake_count}
     
-    # طباعة الإحصائيات
+    # Print statistics
     print("\n📊 إحصائيات Dataset:")
     print("-" * 60)
     total_real = sum(s['real'] for s in stats.values())
@@ -38,7 +38,7 @@ def explore_dataset(data_dir='data'):
     balance = min(total_real, total_fake) / max(total_real, total_fake)
     print(f"\n⚖️  Balance Ratio: {balance:.2%}")
     
-    # تحليل أبعاد الصور
+    # Analyze image dimensions
     print("\n📐 تحليل أبعاد الصور...")
     train_path = Path(data_dir) / 'train'
     
