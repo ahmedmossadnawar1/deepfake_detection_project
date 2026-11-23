@@ -1,12 +1,12 @@
 from flask import Flask, render_template, request, jsonify
-from flask_cors import CORS  # ← ضيف ده
+from flask_cors import CORS  
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
 from PIL import Image
 
 app = Flask(__name__)
-CORS(app)  # ← ضيف ده
+CORS(app)  
 
 # Model Architecture
 class DeepfakeDetector(nn.Module):
