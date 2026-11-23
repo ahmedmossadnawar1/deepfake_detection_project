@@ -1,4 +1,4 @@
-# evaluate_model.py - اختبار النموذج على Test Set
+# evaluate_model.py - evaluate the model on the test set
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
@@ -10,7 +10,7 @@ import numpy as np
 from tqdm import tqdm
 
 def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
-    """تقييم النموذج على Test Set"""
+    """Evaluate the model on the test set"""
     
     print("=" * 60)
     print("🧪 تقييم النموذج على Test Set")
