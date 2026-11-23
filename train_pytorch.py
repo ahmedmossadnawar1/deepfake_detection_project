@@ -19,7 +19,7 @@ class DeepfakeTrainer:
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         
         print("=" * 60)
-        print("🎯 إعداد بيئة التدريب")
+        print("🎯 Setting up training environment")
         print("=" * 60)
         print(f"Device: {self.device.upper()}")
         print(f"Batch Size: {batch_size}")
@@ -55,7 +55,7 @@ class DeepfakeTrainer:
     
     def _load_data(self):
         """Load data"""
-        print("\n📊 تحميل البيانات...")
+        print("\n📊 Loading data...")
         
         self.train_dataset = datasets.ImageFolder(
             f'{self.data_dir}/train',
@@ -170,7 +170,7 @@ class DeepfakeTrainer:
     def train(self, epochs=10, save_best=True):
         """Full training loop"""
         print("\n" + "=" * 60)
-        print(f"🚀 بدء التدريب لـ {epochs} Epochs")
+        print(f"🚀 Starting training for {epochs} epochs")
         print("=" * 60)
         
         start_time = time.time()
@@ -205,17 +205,17 @@ class DeepfakeTrainer:
             if save_best and val_acc > self.best_val_acc:
                 self.best_val_acc = val_acc
                 self.save_checkpoint(epoch, is_best=True)
-                print(f"   ✅ حفظ أفضل نموذج! Val Acc: {val_acc*100:.2f}%")
+                print(f"   ✅ Saved best model! Val Acc: {val_acc*100:.2f}%")
             
             print("-" * 60)
         
         total_time = time.time() - start_time
         
         print("\n" + "=" * 60)
-        print("🎉 انتهى التدريب!")
+        print("🎉 Training complete!")
         print("=" * 60)
-        print(f"⏱️  الوقت الكلي: {total_time/60:.1f} دقيقة ({total_time/3600:.1f} ساعة)")
-        print(f"🏆 أفضل Val Accuracy: {self.best_val_acc*100:.2f}%")
+        print(f"⏱️  Total time: {total_time/60:.1f} minutes ({total_time/3600:.1f} hours)")
+        print(f"🏆 Best Val Accuracy: {self.best_val_acc*100:.2f}%")
         
         # Save final model
         self.save_checkpoint(epoch, is_best=False)
@@ -273,12 +273,12 @@ class DeepfakeTrainer:
         
         plt.tight_layout()
         plt.savefig('training_history.png', dpi=150, bbox_inches='tight')
-        print(f"\n📈 حفظ الرسم في: training_history.png")
+        print(f"\n📈 Saved plot to: training_history.png")
         
         # Save history as JSON
         with open('training_history.json', 'w') as f:
             json.dump(self.history, f, indent=4)
-        print(f"💾 حفظ التاريخ في: training_history.json")
+        print(f"💾 Saved history to: training_history.json")
 
 
 if __name__ == "__main__":
