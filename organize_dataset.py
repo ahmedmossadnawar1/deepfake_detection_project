@@ -12,7 +12,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     """
     
     print("=" * 60)
-    print("📁 تنظيم Dataset")
+    print("📁 Organizing dataset")
     print("=" * 60)
     
     # Create the folder structure
@@ -26,10 +26,10 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
         for category in categories:
             os.makedirs(f'{target_dir}/{split}/{category}', exist_ok=True)
     
-    print("\n✅ تم إنشاء الهيكل")
+    print("\n✅ Structure created")
     
     # Find images
-    print("\n🔍 جاري البحث عن الصور...")
+    print("\n🔍 Looking for images...")
     
     real_images = []
     fake_images = []
@@ -47,24 +47,24 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
                 elif any(x in path_lower for x in ['fake', 'manipulated', 'synthetic', 'deepfake']):
                     fake_images.append(full_path)
     
-    print(f"\n📊 الإحصائيات:")
+    print(f"\n📊 Statistics:")
     print(f"   Real Images: {len(real_images):,}")
     print(f"   Fake Images: {len(fake_images):,}")
     print(f"   Total: {len(real_images) + len(fake_images):,}")
     
     if len(real_images) == 0 or len(fake_images) == 0:
-        print("\n❌ خطأ: لم يتم العثور على صور!")
-        print("   تأكد من:")
-        print("   1. المسار صحيح")
-        print("   2. المجلدات تحتوي على 'real' أو 'fake' في الاسم")
+        print("\n❌ Error: no images found!")
+        print("   Make sure:")
+        print("   1. The path is correct")
+        print("   2. Folders contain 'real' or 'fake' in their names")
         return False
     
     # Balance the data
     min_count = min(len(real_images), len(fake_images))
     max_samples = min(min_count, 10000)  # cap at 10k per class for CPU training
     
-    print(f"\n⚖️  موازنة البيانات:")
-    print(f"   سيتم استخدام {max_samples:,} صورة لكل فئة")
+    print(f"\n⚖️  Balancing data:")
+    print(f"   Using {max_samples:,} images per class")
     
     random.seed(42)
     real_images = random.sample(real_images, max_samples)
@@ -87,12 +87,12 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     real_splits = split_dataset(real_images)
     fake_splits = split_dataset(fake_images)
     
-    print(f"\n📋 التقسيم:")
+    print(f"\n📋 Split:")
     for split in ['train', 'validation', 'test']:
         print(f"   {split.capitalize():12s}: {len(real_splits[split]):,} real + {len(fake_splits[split]):,} fake")
     
     # Copy files
-    print("\n📦 جاري نسخ الملفات...")
+    print("\n📦 Copying files...")
     
     for split in ['train', 'validation', 'test']:
         # Real images
@@ -103,7 +103,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
                 new_name = f"{i:06d}{ext}"
                 shutil.copy2(img_path, f'{target_dir}/{split}/real/{new_name}')
             except Exception as e:
-                print(f"   ⚠️  خطأ في نسخ {img_path}: {e}")
+                print(f"   ⚠️  Error copying {img_path}: {e}")
         
         # Fake images
         print(f"   {split}/fake...")
@@ -113,14 +113,14 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
                 new_name = f"{i:06d}{ext}"
                 shutil.copy2(img_path, f'{target_dir}/{split}/fake/{new_name}')
             except Exception as e:
-                print(f"   ⚠️  خطأ في نسخ {img_path}: {e}")
+                print(f"   ⚠️  Error copying {img_path}: {e}")
     
     print("\n" + "=" * 60)
-    print("✅ تم تنظيم Dataset بنجاح!")
+    print("✅ Dataset organized successfully!")
     print("=" * 60)
     
     # Final summary
-    print("\n📊 الملخص النهائي:")
+    print("\n📊 Final summary:")
     for split in ['train', 'validation', 'test']:
         real_count = len(os.listdir(f'{target_dir}/{split}/real'))
         fake_count = len(os.listdir(f'{target_dir}/{split}/fake'))
@@ -130,22 +130,22 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
 
 if __name__ == "__main__":
     print("\n" + "=" * 60)
-    print("🎯 تنظيم Dataset للـ Deepfake Detection")
+    print("🎯 Dataset organizer for deepfake detection")
     print("=" * 60)
     
-    source = input("\n📂 أدخل مسار مجلد Dataset من Kaggle: ").strip()
+    source = input("\n📂 Enter the path of the Kaggle dataset folder: ").strip()
     
     # Strip quotes if present
     source = source.strip('"').strip("'")
     
     if not os.path.exists(source):
-        print(f"\n❌ المسار غير موجود: {source}")
-        print("\nتأكد من:")
-        print("1. نسخت المسار بشكل صحيح")
-        print("2. المجلد غير مضغوط (extracted)")
+        print(f"\n❌ Path does not exist: {source}")
+        print("\nMake sure:")
+        print("1. You copied the path correctly")
+        print("2. The folder is extracted")
     else:
         success = organize_kaggle_dataset(source)
         
         if success:
-            print("\n🚀 الخطوة التالية:")
+            print("\n🚀 Next steps:")
             print("   python explore_data.py")
