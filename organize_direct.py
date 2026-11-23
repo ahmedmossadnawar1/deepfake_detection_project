@@ -9,7 +9,7 @@ def organize_existing_structure(base_path, target_dir='data'):
     """Organize a dataset already in train/test/valid layout"""
     
     print("="*60)
-    print("📁 تنظيم Dataset من الهيكل الموجود")
+    print("📁 Organizing dataset from the existing structure")
     print("="*60)
     
     base_path = Path(base_path)
@@ -21,26 +21,26 @@ def organize_existing_structure(base_path, target_dir='data'):
     
     # Make sure train exists
     if not train_path.exists():
-        print(f"❌ مجلد train غير موجود في: {base_path}")
+        print(f"❌ train folder not found in: {base_path}")
         return False
     
     # List folders inside train
     folders_in_train = [f for f in train_path.iterdir() if f.is_dir()]
     
-    print(f"\n📂 المجلدات في train: {[f.name for f in folders_in_train]}")
+    print(f"\n📂 Folders in train: {[f.name for f in folders_in_train]}")
     
     if len(folders_in_train) != 2:
-        print(f"❌ خطأ: المفروض يكون مجلدين (real و fake)، لكن موجود {len(folders_in_train)}")
+        print(f"❌ Error: expected two folders (real and fake), found {len(folders_in_train)}")
         return False
     
     # Identify which folder is real and which is fake
     folder1, folder2 = sorted(folders_in_train)
     
-    print(f"\n🤔 أي مجلد هو Real وأي واحد Fake؟")
+    print(f"\n🤔 Which folder is Real and which is Fake?")
     print(f"   1. {folder1.name} = Real, {folder2.name} = Fake")
     print(f"   2. {folder1.name} = Fake, {folder2.name} = Real")
     
-    choice = input("\nاختار (1 أو 2): ").strip()
+    choice = input("\nChoose (1 or 2): ").strip()
     
     if choice == "1":
         real_folder = folder1
@@ -53,17 +53,17 @@ def organize_existing_structure(base_path, target_dir='data'):
     print(f"✅ Fake = {fake_folder.name}")
     
     # Collect images
-    print("\n🔍 جاري عد الصور...")
+    print("\n🔍 Counting images...")
     
     real_images = list(real_folder.glob('*.jpg')) + list(real_folder.glob('*.jpeg')) + list(real_folder.glob('*.png'))
     fake_images = list(fake_folder.glob('*.jpg')) + list(fake_folder.glob('*.jpeg')) + list(fake_folder.glob('*.png'))
     
-    print(f"\n📊 الإحصائيات:")
+    print(f"\n📊 Statistics:")
     print(f"   Real: {len(real_images):,}")
     print(f"   Fake: {len(fake_images):,}")
     
     if len(real_images) == 0 or len(fake_images) == 0:
-        print("❌ خطأ: أحد المجلدات فارغ!")
+        print("❌ Error: one of the folders is empty!")
         return False
     
     # Pick 10k per class for speed
@@ -75,7 +75,7 @@ def organize_existing_structure(base_path, target_dir='data'):
     if len(fake_images) > max_samples:
         fake_images = random.sample(fake_images, max_samples)
     
-    print(f"\n⚖️ سنستخدم: {len(real_images):,} real + {len(fake_images):,} fake")
+    print(f"\n⚖️ Using: {len(real_images):,} real + {len(fake_images):,} fake")
     
     # Split the data
     def split_data(images):
@@ -93,7 +93,7 @@ def organize_existing_structure(base_path, target_dir='data'):
     real_splits = split_data(real_images)
     fake_splits = split_data(fake_images)
     
-    print(f"\n📋 التقسيم:")
+    print(f"\n📋 Split:")
     for split in ['train', 'validation', 'test']:
         print(f"   {split:12s}: {len(real_splits[split]):,} real + {len(fake_splits[split]):,} fake")
     
@@ -102,10 +102,10 @@ def organize_existing_structure(base_path, target_dir='data'):
         os.makedirs(f'{target_dir}/{split}/real', exist_ok=True)
         os.makedirs(f'{target_dir}/{split}/fake', exist_ok=True)
     
-    print("\n✅ تم إنشاء مجلدات data")
+    print("\n✅ data folders created")
     
     # Copy files
-    print("\n📦 جاري نسخ الملفات...")
+    print("\n📦 Copying files...")
     
     for split in ['train', 'validation', 'test']:
         # Real
@@ -129,11 +129,11 @@ def organize_existing_structure(base_path, target_dir='data'):
                 pass
     
     print("\n" + "="*60)
-    print("✅ تم تنظيم Dataset بنجاح!")
+    print("✅ Dataset organized successfully!")
     print("="*60)
     
     # Summary
-    print("\n📊 الملخص النهائي:")
+    print("\n📊 Final summary:")
     for split in ['train', 'validation', 'test']:
         real_count = len(os.listdir(f'{target_dir}/{split}/real'))
         fake_count = len(os.listdir(f'{target_dir}/{split}/fake'))
@@ -143,15 +143,15 @@ def organize_existing_structure(base_path, target_dir='data'):
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("🎯 تنظيم Dataset")
+    print("🎯 Dataset organizer")
     print("="*60)
     
     # Path of the parent folder containing train/test/valid
-    base = input("\n📂 أدخل المسار للمجلد الأب (اللي فيه train): ").strip().strip('"').strip("'")
+    base = input("\n📂 Enter the parent folder path (the one containing train): ").strip().strip('"').strip("'")
     
     success = organize_existing_structure(base)
     
     if success:
-        print("\n🚀 الخطوة التالية: python explore_data.py")
+        print("\n🚀 Next step: python explore_data.py")
     else:
-        print("\n❌ فشل التنظيم. راجع الأخطاء أعلاه.")
+        print("\n❌ Organization failed. Check the errors above.")
