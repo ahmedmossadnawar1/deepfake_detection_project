@@ -5,7 +5,7 @@ def check_environment():
     """Full environment and library check"""
     
     print("=" * 60)
-    print("🔍 فحص بيئة التطوير")
+    print("🔍 Checking development environment")
     print("=" * 60)
     
     # Python Version
@@ -26,7 +26,7 @@ def check_environment():
         'pytorch_grad_cam': 'Grad-CAM'
     }
     
-    print("\n📦 المكتبات المثبتة:")
+    print("\n📦 Installed libraries:")
     print("-" * 60)
     
     missing = []
@@ -39,14 +39,14 @@ def check_environment():
             versions[name] = version
             print(f"✅ {name:20s} - v{version}")
         except ImportError:
-            print(f"❌ {name:20s} - غير مثبتة")
+            print(f"❌ {name:20s} - not installed")
             missing.append(lib)
     
     # PyTorch and CUDA info
     if 'torch' not in missing:
         import torch
         print("\n" + "=" * 60)
-        print("🖥️  معلومات PyTorch & Hardware")
+        print("🖥️  PyTorch & Hardware Info")
         print("=" * 60)
         print(f"PyTorch Version: {torch.__version__}")
         print(f"CUDA Available: {torch.cuda.is_available()}")
@@ -57,20 +57,20 @@ def check_environment():
             print(f"GPU Memory: {torch.cuda.get_device_properties(0).total_memory / 1024**3:.2f} GB")
             device = "cuda"
         else:
-            print("⚠️  تحذير: CUDA غير متاح، سيتم استخدام CPU")
-            print("   التدريب سيكون أبطأ بكثير")
+            print("⚠️  Warning: CUDA not available, using CPU")
+            print("   Training will be much slower")
             device = "cpu"
         
-        print(f"\n🎯 Device للاستخدام: {device.upper()}")
+        print(f"\n🎯 Device to use: {device.upper()}")
     
     # Final result
     print("\n" + "=" * 60)
     if missing:
-        print(f"❌ مكتبات ناقصة: {', '.join(missing)}")
-        print(f"   نفذ: pip install {' '.join(missing)}")
+        print(f"❌ Missing libraries: {', '.join(missing)}")
+        print(f"   Run: pip install {' '.join(missing)}")
         return False
     else:
-        print("✅ كل شيء جاهز للبدء!")
+        print("✅ Everything is ready!")
         print("=" * 60)
         return True
 
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     success = check_environment()
     
     if success:
-        print("\n🚀 الخطوة التالية:")
-        print("   1. حمل Dataset من Kaggle")
-        print("   2. نفذ: python organize_dataset.py")
+        print("\n🚀 Next steps:")
+        print("   1. Download a dataset from Kaggle")
+        print("   2. Run: python organize_dataset.py")
     
     sys.exit(0 if success else 1)
