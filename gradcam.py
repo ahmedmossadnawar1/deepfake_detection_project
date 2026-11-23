@@ -1,4 +1,4 @@
-# gradcam.py - Grad-CAM للتفسير البصري
+# gradcam.py - Grad-CAM visual explanations
 import torch
 import torch.nn.functional as F
 from torchvision import transforms
@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 class GradCAM:
-    """Grad-CAM للتفسير البصري"""
+    """Grad-CAM visual explanations"""
     
     def __init__(self, model, target_layer):
         self.model = model
@@ -56,7 +56,7 @@ class GradCAM:
 
 
 def apply_colormap_on_image(org_img, activation_map, colormap=cv2.COLORMAP_JET):
-    """تطبيق colormap على الصورة"""
+    """Apply a colormap to the image"""
     # Ensure activation map is in the right range
     heatmap = cv2.applyColorMap(np.uint8(255 * activation_map), colormap)
     heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
@@ -69,7 +69,7 @@ def apply_colormap_on_image(org_img, activation_map, colormap=cv2.COLORMAP_JET):
 
 
 def visualize_gradcam(model_path='best_model.pth', data_dir='data/test', num_samples=6):
-    """عرض Grad-CAM لعينات من Test Set"""
+    """Show Grad-CAM for test set samples"""
     
     print("=" * 60)
     print("🔍 Grad-CAM Visualization")
