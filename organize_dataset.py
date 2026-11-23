@@ -7,15 +7,15 @@ from tqdm import tqdm
 
 def organize_kaggle_dataset(source_dir, target_dir='data'):
     """
-    تنظيم dataset من Kaggle
-    يدعم: 140k Real and Fake Faces أو FaceForensics++
+    Organize a dataset from Kaggle
+    Supports: 140k Real and Fake Faces or FaceForensics++
     """
     
     print("=" * 60)
     print("📁 تنظيم Dataset")
     print("=" * 60)
     
-    # إنشاء الهيكل
+    # Create the folder structure
     folders = {
         'train': ['real', 'fake'],
         'validation': ['real', 'fake'],
@@ -28,7 +28,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     
     print("\n✅ تم إنشاء الهيكل")
     
-    # البحث عن الصور
+    # Find images
     print("\n🔍 جاري البحث عن الصور...")
     
     real_images = []
@@ -39,7 +39,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
             if file.lower().endswith(('.jpg', '.jpeg', '.png', '.bmp')):
                 full_path = os.path.join(root, file)
                 
-                # تحديد النوع من المسار أو اسم الملف
+                # Detect the class from the path or filename
                 path_lower = full_path.lower()
                 
                 if any(x in path_lower for x in ['real', 'original', 'authentic']):
@@ -59,9 +59,9 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
         print("   2. المجلدات تحتوي على 'real' أو 'fake' في الاسم")
         return False
     
-    # موازنة البيانات
+    # Balance the data
     min_count = min(len(real_images), len(fake_images))
-    max_samples = min(min_count, 10000)  # حد أقصى 10k لكل فئة للـ CPU
+    max_samples = min(min_count, 10000)  # cap at 10k per class for CPU training
     
     print(f"\n⚖️  موازنة البيانات:")
     print(f"   سيتم استخدام {max_samples:,} صورة لكل فئة")
@@ -70,7 +70,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     real_images = random.sample(real_images, max_samples)
     fake_images = random.sample(fake_images, max_samples)
     
-    # التقسيم: 70% train, 15% val, 15% test
+    # Split: 70% train, 15% val, 15% test
     def split_dataset(images):
         random.shuffle(images)
         total = len(images)
@@ -91,7 +91,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     for split in ['train', 'validation', 'test']:
         print(f"   {split.capitalize():12s}: {len(real_splits[split]):,} real + {len(fake_splits[split]):,} fake")
     
-    # نسخ الملفات
+    # Copy files
     print("\n📦 جاري نسخ الملفات...")
     
     for split in ['train', 'validation', 'test']:
@@ -119,7 +119,7 @@ def organize_kaggle_dataset(source_dir, target_dir='data'):
     print("✅ تم تنظيم Dataset بنجاح!")
     print("=" * 60)
     
-    # ملخص نهائي
+    # Final summary
     print("\n📊 الملخص النهائي:")
     for split in ['train', 'validation', 'test']:
         real_count = len(os.listdir(f'{target_dir}/{split}/real'))
@@ -135,7 +135,7 @@ if __name__ == "__main__":
     
     source = input("\n📂 أدخل مسار مجلد Dataset من Kaggle: ").strip()
     
-    # إزالة علامات التنصيص إذا وجدت
+    # Strip quotes if present
     source = source.strip('"').strip("'")
     
     if not os.path.exists(source):
