@@ -1,4 +1,4 @@
-# train_pytorch.py - تدريب النموذج
+# train_pytorch.py - model training
 import torch
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
@@ -10,7 +10,7 @@ import time
 import json
 
 class DeepfakeTrainer:
-    """كلاس لتدريب نموذج Deepfake Detection"""
+    """Trainer class for the deepfake detection model"""
     
     def __init__(self, data_dir='data', batch_size=8, num_workers=0):
         self.data_dir = data_dir
@@ -54,7 +54,7 @@ class DeepfakeTrainer:
         }
     
     def _load_data(self):
-        """تحميل البيانات"""
+        """Load data"""
         print("\n📊 تحميل البيانات...")
         
         self.train_dataset = datasets.ImageFolder(
@@ -89,7 +89,7 @@ class DeepfakeTrainer:
         print(f"   Batches per epoch: {len(self.train_loader)}")
     
     def _setup_model(self):
-        """إعداد النموذج"""
+        """Set up the model"""
         self.model, self.criterion, self.optimizer, self.scheduler = create_model(
             model_type='mobilenet',
             device=self.device
@@ -99,7 +99,7 @@ class DeepfakeTrainer:
         self.start_epoch = 0
     
     def train_epoch(self, epoch):
-        """تدريب epoch واحد"""
+        """Train one epoch"""
         self.model.train()
         
         running_loss = 0.0
@@ -135,7 +135,7 @@ class DeepfakeTrainer:
         return epoch_loss, epoch_acc
     
     def validate_epoch(self, epoch):
-        """تقييم على validation set"""
+        """Evaluate on the validation set"""
         self.model.eval()
         
         running_loss = 0.0
@@ -168,7 +168,7 @@ class DeepfakeTrainer:
         return epoch_loss, epoch_acc
     
     def train(self, epochs=10, save_best=True):
-        """تدريب كامل"""
+        """Full training loop"""
         print("\n" + "=" * 60)
         print(f"🚀 بدء التدريب لـ {epochs} Epochs")
         print("=" * 60)
@@ -224,7 +224,7 @@ class DeepfakeTrainer:
         self.plot_history()
     
     def save_checkpoint(self, epoch, is_best=False):
-        """حفظ checkpoint"""
+        """Save checkpoint"""
         checkpoint = {
             'epoch': epoch + 1,
             'model_state_dict': self.model.state_dict(),
@@ -240,7 +240,7 @@ class DeepfakeTrainer:
             torch.save(checkpoint, 'last_model.pth')
     
     def plot_history(self):
-        """رسم تطور التدريب"""
+        """Plot training history"""
         fig, axes = plt.subplots(1, 3, figsize=(18, 5))
         
         epochs_range = range(1, len(self.history['train_loss']) + 1)
@@ -282,7 +282,7 @@ class DeepfakeTrainer:
 
 
 if __name__ == "__main__":
-    # إنشاء Trainer
+    # Create the trainer
     trainer = DeepfakeTrainer(
         data_dir='data',
         batch_size=8,
