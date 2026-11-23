@@ -13,7 +13,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     """Evaluate the model on the test set"""
     
     print("=" * 60)
-    print("🧪 تقييم النموذج على Test Set")
+    print("🧪 Evaluating model on test set")
     print("=" * 60)
     
     # Device
@@ -21,7 +21,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     print(f"\nDevice: {device.upper()}")
     
     # Load model
-    print("\n📦 تحميل النموذج...")
+    print("\n📦 Loading model...")
     checkpoint = torch.load(model_path, map_location=device)
     
     model = DeepfakeDetector(model_type='mobilenet', pretrained=False)
@@ -29,7 +29,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     model = model.to(device)
     model.eval()
     
-    print(f"✅ تم تحميل النموذج من Epoch {checkpoint['epoch']}")
+    print(f"✅ Loaded model from epoch {checkpoint['epoch']}")
     print(f"   Best Val Accuracy: {checkpoint['best_val_acc']*100:.2f}%")
     
     # Test transforms
@@ -40,7 +40,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     ])
     
     # Load test data
-    print("\n📊 تحميل Test Data...")
+    print("\n📊 Loading test data...")
     test_dataset = datasets.ImageFolder(data_dir, transform=test_transforms)
     test_loader = DataLoader(test_dataset, batch_size=16, shuffle=False, num_workers=0)
     
@@ -48,7 +48,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     print(f"   Classes: {test_dataset.classes}")
     
     # Evaluate
-    print("\n🔍 جاري التقييم...")
+    print("\n🔍 Evaluating...")
     all_preds = []
     all_labels = []
     all_probs = []
@@ -72,14 +72,14 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     
     # Calculate metrics
     print("\n" + "=" * 60)
-    print("📊 نتائج التقييم")
+    print("📊 Evaluation results")
     print("=" * 60)
     
     accuracy = (all_preds == all_labels).mean()
     print(f"\n🎯 Test Accuracy: {accuracy*100:.2f}%")
     
     # Classification Report
-    print("\n📋 تقرير مفصل:")
+    print("\n📋 Detailed report:")
     print("-" * 60)
     class_names = ['Fake', 'Real']
     report = classification_report(
@@ -109,13 +109,13 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     plt.xlabel('Predicted Label', fontsize=12)
     plt.tight_layout()
     plt.savefig('confusion_matrix.png', dpi=150, bbox_inches='tight')
-    print("\n📈 حفظ Confusion Matrix في: confusion_matrix.png")
+    print("\n📈 Saving confusion matrix to: confusion_matrix.png")
     
     # Calculate per-class metrics
     tn, fp, fn, tp = cm.ravel()
     
     print("\n" + "=" * 60)
-    print("📊 تفاصيل إضافية")
+    print("📊 Additional details")
     print("=" * 60)
     print(f"\n✅ True Negatives (Fake → Fake):  {tn:,}")
     print(f"✅ True Positives (Real → Real):  {tp:,}")
@@ -138,7 +138,7 @@ def evaluate_model(model_path='best_model.pth', data_dir='data/test'):
     print(f"   Real images - Avg score: {real_probs.mean():.4f} (higher = more real)")
     
     print("\n" + "=" * 60)
-    print("✅ انتهى التقييم!")
+    print("✅ Evaluation complete!")
     print("=" * 60)
     
     return accuracy, cm
