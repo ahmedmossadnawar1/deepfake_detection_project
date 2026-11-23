@@ -80,7 +80,7 @@ def visualize_gradcam(model_path='best_model.pth', data_dir='data/test', num_sam
     print(f"\nDevice: {device.upper()}")
     
     # Load model
-    print("\n📦 تحميل النموذج...")
+    print("\n📦 Loading model...")
     checkpoint = torch.load(model_path, map_location=device)
     model = DeepfakeDetector(model_type='mobilenet', pretrained=False)
     model.load_state_dict(checkpoint['model_state_dict'])
@@ -101,7 +101,7 @@ def visualize_gradcam(model_path='best_model.pth', data_dir='data/test', num_sam
     ])
     
     # Get sample images
-    print("\n📸 جمع العينات...")
+    print("\n📸 Collecting samples...")
     fake_dir = Path(data_dir) / 'fake'
     real_dir = Path(data_dir) / 'real'
     
@@ -112,7 +112,7 @@ def visualize_gradcam(model_path='best_model.pth', data_dir='data/test', num_sam
     labels = ['Fake'] * len(fake_images) + ['Real'] * len(real_images)
     
     # Create visualization
-    print("\n🎨 جاري إنشاء Visualizations...")
+    print("\n🎨 Generating visualizations...")
     
     fig, axes = plt.subplots(num_samples, 3, figsize=(12, num_samples*3))
     
@@ -153,10 +153,10 @@ def visualize_gradcam(model_path='best_model.pth', data_dir='data/test', num_sam
     
     plt.tight_layout()
     plt.savefig('gradcam_visualization.png', dpi=150, bbox_inches='tight')
-    print("\n✅ حفظ التصور في: gradcam_visualization.png")
+    print("\n✅ Saved visualization to: gradcam_visualization.png")
     
     print("\n" + "=" * 60)
-    print("✅ انتهى Grad-CAM!")
+    print("✅ Grad-CAM complete!")
     print("=" * 60)
 
 
