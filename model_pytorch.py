@@ -64,14 +64,14 @@ class DeepfakeDetector(nn.Module):
 
 def create_model(model_type='mobilenet', device='cpu'):
     print("=" * 60)
-    print("🔨 بناء النموذج")
+    print("🔨 Building model")
     print("=" * 60)
     
     model = DeepfakeDetector(model_type=model_type, pretrained=True)
     model = model.to(device)
     
     trainable, total = model.count_parameters()
-    print(f"\n📊 معلومات النموذج:")
+    print(f"\n📊 Model info:")
     print(f"   Type: {model_type}")
     print(f"   Total Parameters: {total:,}")
     print(f"   Trainable Parameters: {trainable:,}")
@@ -93,14 +93,14 @@ def create_model(model_type='mobilenet', device='cpu'):
         patience=2
     )
     
-    print("\n✅ تم بناء النموذج بنجاح!")
+    print("\n✅ Model built successfully!")
     print("=" * 60)
     
     return model, criterion, optimizer, scheduler
 
 
 def test_model():
-    print("\n🧪 اختبار النموذج...")
+    print("\n🧪 Testing model...")
     
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     model, criterion, optimizer, scheduler = create_model('mobilenet', device)
@@ -118,7 +118,7 @@ def test_model():
     loss = criterion(output, dummy_labels)
     
     print(f"\n   Loss: {loss.item():.4f}")
-    print("\n✅ النموذج يعمل بشكل صحيح!")
+    print("\n✅ Model works correctly!")
 
 
 if __name__ == "__main__":
