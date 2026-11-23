@@ -2,15 +2,15 @@
 import os
 from pathlib import Path
 
-path = input("أدخل المسار: ").strip().strip('"').strip("'")
+path = input("Enter path: ").strip().strip('"').strip("'")
 path = Path(path)
 
 print("\n" + "="*60)
-print("📁 المجلدات الموجودة:")
+print("📁 Existing folders:")
 print("="*60)
 
 if not path.exists():
-    print("❌ المسار غير موجود!")
+    print("❌ Path does not exist!")
 else:
     folders = [f for f in path.iterdir() if f.is_dir()]
     
@@ -18,10 +18,10 @@ else:
         # Count images
         images = list(folder.glob('*.jpg')) + list(folder.glob('*.jpeg')) + list(folder.glob('*.png'))
         print(f"\n📂 {folder.name}")
-        print(f"   عدد الصور: {len(images):,}")
+        print(f"   Images: {len(images):,}")
         
         # Show first 3 filenames
         if images:
-            print(f"   أمثلة: {[img.name for img in images[:3]]}")
+            print(f"   Examples: {[img.name for img in images[:3]]}")
 
 print("\n" + "="*60)
