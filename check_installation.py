@@ -2,7 +2,7 @@
 import sys
 
 def check_environment():
-    """فحص شامل للبيئة والمكتبات"""
+    """Full environment and library check"""
     
     print("=" * 60)
     print("🔍 فحص بيئة التطوير")
@@ -11,7 +11,7 @@ def check_environment():
     # Python Version
     print(f"\n✅ Python Version: {sys.version.split()[0]}")
     
-    # المكتبات الأساسية
+    # Core libraries
     libraries = {
         'torch': 'PyTorch',
         'torchvision': 'TorchVision',
@@ -42,7 +42,7 @@ def check_environment():
             print(f"❌ {name:20s} - غير مثبتة")
             missing.append(lib)
     
-    # معلومات PyTorch و CUDA
+    # PyTorch and CUDA info
     if 'torch' not in missing:
         import torch
         print("\n" + "=" * 60)
@@ -63,7 +63,7 @@ def check_environment():
         
         print(f"\n🎯 Device للاستخدام: {device.upper()}")
     
-    # النتيجة النهائية
+    # Final result
     print("\n" + "=" * 60)
     if missing:
         print(f"❌ مكتبات ناقصة: {', '.join(missing)}")
